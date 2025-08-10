@@ -536,4 +536,76 @@
       }
 
       // Update display
-      update
+      updateDisplay(capRate, dscr, equityMultiple, verdict, verdictClass);
+    }
+
+    function updateDisplay(capRate, dscr, equityMultiple, verdict, verdictClass) {
+      // Update cap rate
+      document.getElementById('cap-rate-display').textContent = capRate ? capRate.toFixed(2) + '%' : '–';
+      document.getElementById('cap-rate-progress').style.width = Math.min(100, (capRate/state.marketCap)*100) + '%';
+      document.getElementById('cap-rate-sheet').textContent = capRate ? capRate.toFixed(2) + '%' : '–';
+      
+      // Update DSCR
+      document.getElementById('dscr-display').textContent = dscr ? dscr.toFixed(2) : '–';
+      document.getElementById('dscr-progress').style.width = Math.min(100, (dscr/1.25)*100) + '%';
+      document.getElementById('dscr-sheet').textContent = dscr ? dscr.toFixed(2) : '–';
+      
+      // Update equity multiple
+      document.getElementById('equity-multiple-display').textContent = equityMultiple ? equityMultiple.toFixed(2) + 'x' : '–';
+      document.getElementById('equity-multiple-progress').style.width = Math.min(100, (equityMultiple/2)*100) + '%';
+      document.getElementById('equity-sheet').textContent = equityMultiple ? equityMultiple.toFixed(2) + 'x' : '–';
+      
+      // Update verdict
+      document.getElementById('verdict-badge').textContent = verdict;
+      document.getElementById('verdict-badge').className = 'verdict-badge ' + verdictClass;
+      document.getElementById('verdict-card').className = verdictClass;
+      document.getElementById('verdict-card').querySelector('div').textContent = verdict;
+      
+      // Update other displays
+      document.getElementById('target-cap').textContent = state.marketCap.toFixed(1);
+      document.getElementById('price-display').textContent = currency(state.purchasePrice);
+      document.getElementById('noi-display').textContent = currency(state.noi);
+      document.getElementById('monthly-rent-display').textContent = currency(state.monthlyRent);
+      
+      // Update estimates
+      const egi = state.monthlyRent * 12 * (1 + state.otherIncomePct/100);
+      const opex = state.opxPerUnit * state.units;
+      document.getElementById('egi-est').textContent = currency(egi);
+      document.getElementById('opex-est').textContent = currency(opex);
+      document.getElementById('noi-est').textContent = currency(state.noi);
+      
+      // Update chart values
+      document.getElementById('chart-rent').textContent = currency(egi);
+      document.getElementById('chart-opex').textContent = currency(opex);
+      document.getElementById('chart-noi').textContent = currency(state.noi);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial values
+      document.getElementById('purchase-price').value = state.purchasePrice;
+      document.getElementById('market-cap').value = state.marketCap;
+      document.getElementById('noi-input').value = state.noi;
+      document.getElementById('ltv-range').value = state.ltv;
+      document.getElementById('ltv-display').textContent = state.ltv + '%';
+      document.getElementById('interest-rate').value = state.rate;
+      document.getElementById('amort-years').value = state.amortYears;
+      document.getElementById('io-years').value = state.ioYears;
+      document.getElementById('hold-years').value = state.holdYears;
+      document.getElementById('exit-cap').value = state.exitCap;
+      document.getElementById('capex').value = state.capex;
+      document.getElementById('closing-costs').value = state.closingCosts;
+      document.getElementById('reserves').value = state.reserves;
+      document.getElementById('total-units').value = state.units;
+      document.getElementById('monthly-rent').value = state.monthlyRent;
+      document.getElementById('other-income').value = state.otherIncomePct;
+      document.getElementById('opex-per-unit').value = state.opxPerUnit;
+      document.getElementById('exit-cap-input').value = state.exitCap;
+      document.getElementById('hold-years-input').value = state.holdYears;
+      
+      // Calculate initial metrics
+      calculateMetrics();
+    });
+  </script>
+</body>
+</html>
